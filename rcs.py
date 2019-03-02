@@ -7,8 +7,8 @@ from os import _exit
 
 
 pm = pymem.Pymem("csgo.exe")
-client = pymem.process.module_from_name(pm.process_id, "client_panorama.dll").base_address
-engine = pymem.process.module_from_name(pm.process_id, "engine.dll").base_address
+client = pymem.process.module_from_name(pm.process_handle, "client_panorama.dll").lpBaseOfDll
+engine = pymem.process.module_from_name(pm.process_handle, "engine.dll").lpBaseOfDll
 
 m_iShotsFired = 0xA370
 m_aimPunchAngle = 0x302C
