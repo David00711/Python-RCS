@@ -10,11 +10,11 @@ pm = pymem.Pymem("csgo.exe")
 client = pymem.process.module_from_name(pm.process_id, "client_panorama.dll").base_address
 engine = pymem.process.module_from_name(pm.process_id, "engine.dll").base_address
 
-m_iShotsFired = 0xA2C0
-m_aimPunchAngle = 0x301C
-dwClientState = 0x586A74
-dwLocalPlayer = 0xC5B80C
-dwClientState_ViewAngles = 0x4D10
+m_iShotsFired = 0xA370
+m_aimPunchAngle = 0x302C
+dwClientState = 0x58BCFC
+dwLocalPlayer = 0xCCA6B4
+dwClientState_ViewAngles = 0x4D88
 
 switch = True
 rcsonoff = True
