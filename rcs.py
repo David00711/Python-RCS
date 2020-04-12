@@ -43,7 +43,6 @@ client = pymem.process.module_from_name(pm.process_handle, "client_panorama.dll"
 engine = pymem.process.module_from_name(pm.process_handle, "engine.dll").lpBaseOfDll
 
 
-switch = True
 rcsonoff = True
 
 
@@ -84,7 +83,7 @@ def main():
     global amount
     oldpunchx = 0.0
     oldpunchy = 0.0
-    while switch:
+    while True:
         time.sleep(0.01)
         if rcsonoff:
             rcslocalplayer = pm.read_int(client + dwLocalPlayer)
