@@ -5,41 +5,21 @@ import math
 import keyboard
 from os import _exit
 import requests
-import re
 
 
-r = requests.get("https://raw.githubusercontent.com/frk1/hazedumper/master/csgo.hpp")
-r = r.text
+offsets = 'https://raw.githubusercontent.com/frk1/hazedumper/master/csgo.json'
+response = requests.get(offsets).json()
 
 
-offsets = ['dwLocalPlayer', 'm_iShotsFired',
-           'm_aimPunchAngle', 'dwClientState', 'dwClientState_ViewAngles']
-
-
-d = {}
-offs = []
-for i in range(len(offsets)):
-    if offsets[i] in r:
-        search = re.findall(str(offsets[i]) + '\s'"= (.*);", r)
-        offs += search
-
-
-i = 0
-while i <= len(offsets)-1:
-    (key, val) = offsets[i], offs[i]
-    d[key] = val
-    i += 1
-
-
-m_iShotsFired = int(d['m_iShotsFired'], base = 16)
-m_aimPunchAngle = int(d['m_aimPunchAngle'], base = 16)
-dwClientState = int(d['dwClientState'], base = 16)
-dwLocalPlayer = int(d['dwLocalPlayer'], base = 16)
-dwClientState_ViewAngles = int(d['dwClientState_ViewAngles'], base = 16)
+m_iShotsFired = int(response["netvars"]["m_iShotsFired"])
+m_aimPunchAngle = int(response["netvars"]["m_aimPunchAngle"])
+dwClientState_ViewAngles = int(response["signatures"]["dwClientState_ViewAngles"])
+dwLocalPlayer = int(response["signatures"]["dwLocalPlayer"])
+dwClientState_ViewAngles = int(response["signatures"]["dwClientState_ViewAngles"])
 
 
 pm = pymem.Pymem("csgo.exe")
-client = pymem.process.module_from_name(pm.process_handle, "client_panorama.dll").lpBaseOfDll
+client = pymem.process.module_from_name(pm.process_handle, "client.dll").lpBaseOfDll
 engine = pymem.process.module_from_name(pm.process_handle, "engine.dll").lpBaseOfDll
 
 
