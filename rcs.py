@@ -23,21 +23,6 @@ client = pymem.process.module_from_name(pm.process_handle, "client.dll").lpBaseO
 engine = pymem.process.module_from_name(pm.process_handle, "engine.dll").lpBaseOfDll
 
 
-rcsonoff = True
-
-
-def normalizeAngles(viewAngleX, viewAngleY):
-    if viewAngleX > 89:
-        viewAngleX -= 360
-    if viewAngleX < -89:
-        viewAngleX += 360
-    if viewAngleY > 180:
-        viewAngleY -= 360
-    if viewAngleY < -180:
-        viewAngleY += 360
-    return viewAngleX, viewAngleY
-
-
 def checkangles(x, y):
     if x > 89:
         return False
@@ -60,32 +45,27 @@ def nanchecker(first, second):
 
 def main():
     print('rcs is running')
-    global amount
-    oldpunchx = 0.0
-    oldpunchy = 0.0
-    while True:
-        time.sleep(0.01)
-        if rcsonoff:
-            rcslocalplayer = pm.read_int(client + dwLocalPlayer)
-            rcsengine = pm.read_int(engine + dwClientState)
-            if pm.read_int(rcslocalplayer + m_iShotsFired) > 2:
-                rcs_x = pm.read_float(rcsengine + dwClientState_ViewAngles)
-                rcs_y = pm.read_float(rcsengine + dwClientState_ViewAngles + 0x4)
-                punchx = pm.read_float(rcslocalplayer + m_aimPunchAngle)
-                punchy = pm.read_float(rcslocalplayer + m_aimPunchAngle + 0x4)
-                newrcsx = rcs_x - (punchx - oldpunchx) * 2
-                newrcsy = rcs_y - (punchy - oldpunchy) * 2
-                newrcs, newrcy = normalizeAngles(newrcsx, newrcsy)
-                oldpunchx = punchx
-                oldpunchy = punchy
-                if nanchecker(newrcsx, newrcsy) and checkangles(newrcsx, newrcsy):
-                    pm.write_float(rcsengine + dwClientState_ViewAngles, newrcsx)
-                    pm.write_float(rcsengine + dwClientState_ViewAngles + 0x4, newrcsy)
-            else:
-                oldpunchx = 0.0
-                oldpunchy = 0.0
-                newrcsx = 0.0
-                newrcsy = 0.0
+    if pm.read_uint(player + m_iShotsFired) > 2:
+
+        rcs.x = pm.read_float(engine_pointer + dwClientState_ViewAngles)
+        rcs.y = pm.read_float(engine_pointer + dwClientState_ViewAngles + 0x4)
+
+        punch.x = pm.read_float(player + m_aimPunchAngle)
+        punch.y = pm.read_float(player + m_aimPunchAngle + 0x4)
+
+        newrcs.x = rcs.x - (punch.x - oldpunch.x) * 2
+        newrcs.y = rcs.y - (punch.y - oldpunch.y) * 2
+        oldpunch.x = punch.x
+        oldpunch.y = punch.y
+
+        if nanchecker(newrcs.x, newrcs.y) and checkangles(newrcs.x, newrcs.y):
+            pm.write_float(engine_pointer + dwClientState_ViewAngles, newrcs.x)
+            pm.write_float(engine_pointer + dwClientState_ViewAngles + 0x4, newrcs.y)
+    else:
+        oldpunch.x = 0.0
+        oldpunch.y = 0.0
+        newrcs.x = 0.0
+        newrcs.y = 0.0
             if keyboard.is_pressed('delete'):
                 _exit(0)
 
