@@ -15,11 +15,12 @@ engine = pymem.process.module_from_name(pm.process_handle, "engine.dll").lpBaseO
 offsets = 'https://raw.githubusercontent.com/frk1/hazedumper/master/csgo.json'
 response = requests.get(offsets).json()
 
-
+# Signatures
 dwClientState = int(response["signatures"]["dwClientState"])
 dwLocalPlayer = int(response['signatures']['dwLocalPlayer'])
 dwClientState_ViewAngles = int(response["signatures"]["dwClientState_ViewAngles"])
 
+# Netvars
 m_iShotsFired = int(response["netvars"]["m_iShotsFired"])
 m_aimPunchAngle = int(response["netvars"]["m_aimPunchAngle"])
 
